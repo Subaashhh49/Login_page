@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+        @keyframes gradientBG {
+            0% {background-position: 0% 50%;}
+            50% {background-position: 100% 50%;}
+            100% {background-position: 0% 50%;}
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+            padding: 3rem;
+            width: 380px;
+            position: relative;
+            overflow: hidden;
+        }
+        .container::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 20%, transparent 20%),
+                        radial-gradient(circle, transparent 20%, rgba(255,255,255,0.3) 20%, transparent 30%),
+                        radial-gradient(circle, rgba(255,255,255,0.3) 20%, transparent 20%);
+            background-size: 80px 80px;
+            background-position: 0 0, 40px 40px, 130px 70px;
+            z-index: -1;
+            animation: bubbles 15s linear infinite;
+        }
+        @keyframes bubbles {
+            0% {transform: rotate(0deg);}
+            100% {transform: rotate(360deg);}
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #333;
+            font-weight: 600;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 10px 15px;
+            border: none;
+            border-bottom: 2px solid #ddd;
+            background-color: transparent;
+            outline: none;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        .input-group input:focus {
+            border-color: #4ECDC4;
+        }
+        .input-group label {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            font-size: 1rem;
+            color: #777;
+            transition: all 0.3s;
+            pointer-events: none;
+        }
+        .input-group input:focus + label,
+        .input-group input:not(:placeholder-shown) + label {
+            top: -20px;
+            left: 0;
+            font-size: 0.8rem;
+            color: #4ECDC4;
+        }
+        .input-group i {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: #777;
+        }
+        button {
+            padding: 12px;
+            background-color: #4ECDC4;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+        button:hover {
+            background-color: #45b7a7;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+        }
+        .links {
+            margin-top: 2rem;
+            text-align: center;
+        }
+        .links a {
+            color: #4ECDC4;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        .links a:hover {
+            color: #45b7a7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome Back</h1>
+        <form id="loginForm">
+            <div class="input-group">
+                <input type="text" id="username" required placeholder=" ">
+                <label for="username">Username</label>
+                <i class="fas fa-envelope"></i>
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" required placeholder=" ">
+                <label for="password">Password</label>
+                <i class="fas fa-lock"></i>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+        <div class="links">
+            <a href="register.html">Create Account</a>
+            <a href="reset_password.html">Forgot Password?</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+    
+            const username = document.getElementById('username').value;  // Username instead of email
+            const password = document.getElementById('password').value;
+    
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password })
+            });
+    
+            const data = await response.json();
+            if (response.ok) {
+                alert("Login successful!");
+                window.location.href = "dashboard.html";  // Redirect to a dashboard or home page
+            } else {
+                alert(data.detail || "Login failed");
+            }
+        });
+    </script>
+    
+</body>
+</html>
