@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reset Password</title>
+    <title>iBeer.ai - Login</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
@@ -19,7 +19,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            background: linear-gradient(45deg, #ccc1b0, #d38a36);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
         }
@@ -59,7 +59,7 @@
         h1 {
             text-align: center;
             margin-bottom: 2rem;
-            color: #333;
+            color: #d35400;
             font-weight: 600;
         }
         form {
@@ -74,14 +74,14 @@
             width: 100%;
             padding: 10px 15px;
             border: none;
-            border-bottom: 2px solid #ddd;
+            border-bottom: 2px solid #e67e22;
             background-color: transparent;
             outline: none;
             font-size: 1rem;
             transition: border-color 0.3s;
         }
         .input-group input:focus {
-            border-color: #4ECDC4;
+            border-color: #d35400;
         }
         .input-group label {
             position: absolute;
@@ -97,17 +97,17 @@
             top: -20px;
             left: 0;
             font-size: 0.8rem;
-            color: #4ECDC4;
+            color: #d35400;
         }
         .input-group i {
             position: absolute;
             top: 10px;
             right: 15px;
-            color: #777;
+            color: #e67e22;
         }
         button {
             padding: 12px;
-            background-color: #4ECDC4;
+            background-color: #e67e22;
             color: white;
             border: none;
             border-radius: 50px;
@@ -118,7 +118,7 @@
             margin-top: 1rem;
         }
         button:hover {
-            background-color: #45b7a7;
+            background-color: #d35400;
             transform: translateY(-2px);
             box-shadow: 0 5px 10px rgba(0,0,0,0.2);
         }
@@ -127,53 +127,70 @@
             text-align: center;
         }
         .links a {
-            color: #4ECDC4;
+            color: #e67e22;
             text-decoration: none;
+            margin: 0 10px;
             font-size: 0.9rem;
             transition: color 0.3s;
         }
         .links a:hover {
-            color: #45b7a7;
+            color: #d35400;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Reset Password</h1>
-        <form id="resetPasswordForm">
+        <h1>iBeer.ai Login</h1>
+        <form id="loginForm" action="/login" method="post">
             <div class="input-group">
-                <input type="email" id="email" required placeholder=" ">
-                <label for="email">Email</label>
-                <i class="fas fa-envelope"></i>
+                <input type="text" id="username" name="username" required placeholder=" ">
+                <label for="username">Username</label>
+                <i class="fas fa-user"></i>
             </div>
-            <button type="submit">Reset Password</button>
+            <div class="input-group">
+                <input type="password" id="password" name="password" required placeholder=" ">
+                <label for="password">Password</label>
+                <i class="fas fa-lock"></i>
+            </div>
+            <button type="submit">Login</button>
         </form>
         <div class="links">
-            <a href="login.html">Back to Login</a>
+            <a href="register.html">Create Account</a>
+            <a href="reset_password.html">Forgot Password?</a>
         </div>
     </div>
-
     <script>
-        document.getElementById('resetPasswordForm').addEventListener('submit', async function(e) {
+        document.getElementById("loginForm").addEventListener("submit", async function (e) {
             e.preventDefault();
-    
-            const email = document.getElementById('email').value;
-    
-            const response = await fetch('/reset_password', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: JSON.stringify({ email })
-            });
-               
-            const data = await response.json();
-            //if (response.ok) {
-            //    alert("Password reset requested! Check your email for a reset token.");
-            //} else {
-            alert(data.message || "Requset failed");
-            //}
+            
+            const username = document.getElementById("username").value;  // Using username instead of email
+            const password = document.getElementById("password").value;
+            
+            try {
+                const response = await fetch("http://127.0.0.1:8000/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ username, password })  // Ensure correct request format
+                });
+        
+                const data = await response.json();
+        
+                if (!response.ok) {
+                    console.error("Login failed:", data);
+                    alert(`Login failed: ${JSON.stringify(data.detail)}`);  // Properly format the error message
+                    return;
+                }
+        
+                console.log("Login successful:", data);
+                window.location.href = "dashboard.html";  // Redirect to dashboard or next page
+            } catch (error) {
+                console.error("Network error:", error);
+                alert("Network error: Could not connect to the server.");
+            }
         });
+        
     </script>
     
 </body>
